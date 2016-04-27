@@ -14,11 +14,13 @@ def get_student():
     """Show information about a student."""
 
     github = request.args.get('github', 'jhacks')
+    grades = hackbright.get_grades_by_github(github)
     first, last, github = hackbright.get_student_by_github(github)
     html = render_template("student_info.html",
     						first=first,
     						last=last,
-    						github=github)
+    						github=github,
+    						grades=grades)
 
     return html
 
@@ -40,6 +42,18 @@ def student_add():
 							first=first_name,
 							last=last_name,
 							github=github)
+
+@app.route("/project")
+def get_project_info():
+	"""Display information about particular projects."""
+	
+	title = request.args.get('title', 'Markov')
+	project_info = hackbright.get_project_by_title(title)
+	student_grades = hackbright.get_grades_by_title(title)
+
+	return render_template('project_info.html',
+							project_info=project_info,
+							student_grades=student_grades)
 
 
 if __name__ == "__main__":
